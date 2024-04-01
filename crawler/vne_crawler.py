@@ -41,7 +41,16 @@ class VNECrawler:
 
         author_tag = article.find('p', class_="author_mail")
 
-        # if the article is not use "author_mail", get the last <p Normal> tag
+        # if the article is not use "author_mail", get the last <p> tag with "text-align:right" style
+        if author_tag is None:
+            pt = article.find_all('p')
+            for p in pt:
+                if "text-align:right" in p.get('style', ''):
+                    author_tag = p
+                    break
+
+        # if the article is not use "author_mail" and not have <p> tag with "text-align:right" style, get the last
+        # <p Normal> tag
         if author_tag is None:
             pt = article.find_all('p', class_="Normal")
             if len(pt) == 0:
