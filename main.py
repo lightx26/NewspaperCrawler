@@ -24,7 +24,7 @@ def extract_newspaper(category, page_number=1, site="vne", limit=None, output_pa
 
 
 if __name__ == "__main__":
-    category = "phap-luat"
+    category = "the-thao"
     site = "vne"
     output_path = os.path.join('data', site + "_" + category + '.csv')
     extract_newspaper(category, 20, site=site, output_path=output_path)

@@ -20,7 +20,7 @@ class VNECrawler:
     def __get_title(self):
         title = self.soup.find('h1', class_='title-detail')
 
-        if title is None:
+        if title is None or not Filter.is_visible(title):
             return ''
 
         return title.get_text()
@@ -28,7 +28,7 @@ class VNECrawler:
     def __get_date(self):
         date = self.soup.find('span', class_='date')
 
-        if date is None:
+        if date is None or not Filter.is_visible(date):
             return ''
 
         return date.get_text()
@@ -36,7 +36,7 @@ class VNECrawler:
     def __get_author(self):
         article = self.soup.find('article', class_="fck_detail")
 
-        if article is None:
+        if article is None or not Filter.is_visible(article):
             return '', ''
 
         author_tag = article.find('p', class_="author_mail")
@@ -56,7 +56,7 @@ class VNECrawler:
     def __get_description(self):
         description = self.soup.find('p', class_='description')
 
-        if description is None:
+        if description is None or not Filter.is_visible(description):
             return ''
 
         location = description.find('span', class_="location-stamp")
@@ -76,7 +76,7 @@ class VNECrawler:
         if len(paragraphs) == 0:
             return []
 
-        return [p.get_text() for p in paragraphs[:-1]]
+        return [p.get_text() for p in paragraphs[:-1] if Filter.is_visible(p)]
 
     def __get_content(self):
         return '\n'.join(self.__get_paragraphs())
@@ -112,3 +112,9 @@ class VNECrawler:
             articles_urls.append(link.get("href"))
 
         return articles_urls
+
+
+class Filter:
+    @staticmethod
+    def is_visible(element):
+        return (element.get('style') is None) or ('display: none' not in element.get('style', ''))
