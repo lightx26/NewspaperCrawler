@@ -1,6 +1,7 @@
 import os.path
 from crawler.vne_crawler import VNECrawler
 from utils import ContentWriter
+import threading
 
 
 def extract_newspaper(category, page_number=1, site="vne", limit=None, output_path="data/vne.csv"):
@@ -24,7 +25,15 @@ def extract_newspaper(category, page_number=1, site="vne", limit=None, output_pa
 
 
 if __name__ == "__main__":
-    category = "the-thao"
+    categories = ["the-thao", "giao-duc", "phap-luat", "the-gioi"]
+    # category = "the-thao"
     site = "vne"
-    output_path = os.path.join('data', site + "_" + category + '.csv')
-    extract_newspaper(category, 20, site=site, output_path=output_path)
+    threads = []
+    # output_path = os.path.join('data')
+    for category in categories:
+        thr1 = threading.Thread(target=extract_newspaper, args=(category, 20, site, None, "data/vne__" + category + ".csv"))
+        thr1.start()
+        threads.append(thr1)
+
+    for thr in threads:
+        thr.join()
